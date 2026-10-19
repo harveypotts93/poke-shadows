@@ -1,4 +1,4 @@
-const APP_CACHE_NAME = "poke-quiz-app-v3";
+const APP_CACHE_NAME = "poke-quiz-app-v4";
 const ARTWORK_CACHE_NAME = "poke-quiz-artwork-v1";
 const DATA_CACHE_NAME = "poke-quiz-data-v1";
 const APP_SHELL = [

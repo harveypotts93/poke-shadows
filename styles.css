@@ -277,16 +277,14 @@ h1 span {
   background: #f8f6ff;
 }
 
-.generation-option input,
-.mode-option input {
+.generation-option input {
   width: 16px;
   height: 16px;
   flex: 0 0 auto;
   accent-color: var(--purple);
 }
 
-.generation-option span,
-.mode-copy {
+.generation-option span {
   display: flex;
   min-width: 0;
   flex-direction: column;
@@ -336,65 +334,6 @@ h1 span {
   margin-left: auto;
   color: var(--muted);
   font-size: 10px;
-}
-
-.mode-section {
-  margin-bottom: 12px;
-}
-
-.mode-options {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 9px;
-}
-
-.mode-option {
-  position: relative;
-  display: flex;
-  min-height: 73px;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 12px;
-  border: 1px solid #ebeaf3;
-  border-radius: 12px;
-  background: #fff;
-  cursor: pointer;
-}
-
-.mode-option:has(input:checked) {
-  border-color: #b5a4ff;
-  background: #f8f6ff;
-}
-
-.mode-option input {
-  margin: 2px 0 0;
-}
-
-.mode-copy {
-  padding-right: 10px;
-}
-
-.mode-copy strong {
-  font-size: 12px;
-}
-
-.mode-copy small {
-  color: var(--muted);
-  font-size: 10px;
-  line-height: 1.4;
-}
-
-.mode-check {
-  position: absolute;
-  top: 8px;
-  right: 9px;
-  color: var(--purple);
-  font-size: 12px;
-  opacity: 0;
-}
-
-.mode-option:has(input:checked) .mode-check {
-  opacity: 1;
 }
 
 .setup-error {
@@ -957,13 +896,8 @@ h1 span {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .mode-options,
   .setup-buttons {
     grid-template-columns: 1fr;
-  }
-
-  .mode-option {
-    min-height: 59px;
   }
 }
 

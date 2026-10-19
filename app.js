@@ -1,8 +1,8 @@
 const API_URL = "https://pokeapi.co/api/v2/pokemon-species?limit=1025";
 const ARTWORK_ORIGIN = "https://raw.githubusercontent.com";
 const ARTWORK_URL = `${ARTWORK_ORIGIN}/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork`;
-const HARD_ARTWORK_URL = `${ARTWORK_ORIGIN}/PokeAPI/sprites/master/sprites/pokemon/other/home`;
 const ARTWORK_CACHE_NAME = "poke-quiz-artwork-v1";
+const GENERATION_DEFAULT_VERSION = "gen-1-3";
 const GENERATIONS = [
   { id: 1, start: 1, end: 151 },
   { id: 2, start: 152, end: 251 },
@@ -50,7 +50,6 @@ let score = 0;
 let currentAnswer = null;
 let answered = false;
 let installPrompt = null;
-let selectedMode = "normal";
 let downloadController = null;
 
 function isRunningAsApp() {
@@ -127,9 +126,8 @@ function shuffle(items) {
   return shuffled;
 }
 
-function imageUrl(pokemon, hardMode = false) {
-  const artwork = hardMode ? HARD_ARTWORK_URL : ARTWORK_URL;
-  return `${artwork}/${pokemon.id}.png`;
+function imageUrl(pokemon) {
+  return `${ARTWORK_URL}/${pokemon.id}.png`;
 }
 
 function formatName(name) {
@@ -170,7 +168,6 @@ function updateSelectedCount() {
 function saveSettings() {
   try {
     localStorage.setItem("poke-quiz-generations", JSON.stringify(getSelectedGenerationIds()));
-    localStorage.setItem("poke-quiz-mode", document.querySelector('input[name="mode"]:checked').value);
   } catch (error) {
     console.error("Unable to save quiz settings.", error);
   }
@@ -178,16 +175,18 @@ function saveSettings() {
 
 function restoreSettings() {
   try {
+    const defaultVersion = localStorage.getItem("poke-quiz-generation-default");
     const savedGenerations = JSON.parse(localStorage.getItem("poke-quiz-generations"));
-    if (Array.isArray(savedGenerations)) {
+    if (defaultVersion !== GENERATION_DEFAULT_VERSION) {
+      for (const checkbox of generationCheckboxes) {
+        checkbox.checked = Number(checkbox.value) <= 3;
+      }
+      localStorage.setItem("poke-quiz-generation-default", GENERATION_DEFAULT_VERSION);
+      saveSettings();
+    } else if (Array.isArray(savedGenerations)) {
       for (const checkbox of generationCheckboxes) {
         checkbox.checked = savedGenerations.includes(Number(checkbox.value));
       }
-    }
-
-    const savedMode = localStorage.getItem("poke-quiz-mode");
-    if (savedMode === "normal" || savedMode === "hard") {
-      document.querySelector(`input[name="mode"][value="${savedMode}"]`).checked = true;
     }
   } catch (error) {
     console.error("Unable to restore quiz settings.", error);
@@ -243,10 +242,7 @@ function showQuizError(message) {
 
 async function getCachedPokemonPool(pokemon) {
   const cachedUrls = await getCachedArtworkUrls();
-  return pokemon.filter((entry) => (
-    cachedUrls.has(imageUrl(entry))
-    && cachedUrls.has(imageUrl(entry, true))
-  ));
+  return pokemon.filter((entry) => cachedUrls.has(imageUrl(entry)));
 }
 
 async function getCachedArtworkUrls() {
@@ -316,7 +312,7 @@ function nextQuestion() {
     mysteryImage.classList.remove("is-hidden");
   };
   mysteryImage.onerror = () => showQuizError("The Pokémon image couldn't load.");
-  mysteryImage.src = imageUrl(answer, selectedMode === "hard");
+  mysteryImage.src = imageUrl(answer);
 
   const distractors = shuffle(pokemonList.filter((pokemon) => pokemon.id !== answer.id)).slice(0, 3);
   const options = shuffle([answer, ...distractors]);
@@ -375,7 +371,6 @@ async function startQuiz() {
       }
     }
 
-    selectedMode = document.querySelector('input[name="mode"]:checked').value;
     questionOrder = shuffle(pokemonList);
     questionIndex = 0;
     roundNumber = 0;
@@ -394,7 +389,7 @@ async function startQuiz() {
 }
 
 function buildOfflineImageUrls(pokemon) {
-  return pokemon.flatMap((entry) => [imageUrl(entry), imageUrl(entry, true)]);
+  return pokemon.map(imageUrl);
 }
 
 async function downloadOfflineQuiz() {
@@ -488,9 +483,6 @@ async function initialize() {
       saveSettings();
       updateSelectedCount();
     });
-  }
-  for (const modeInput of document.querySelectorAll('input[name="mode"]')) {
-    modeInput.addEventListener("change", saveSettings);
   }
   document.querySelector("#select-all-generations").addEventListener("click", () => {
     for (const checkbox of generationCheckboxes) checkbox.checked = true;

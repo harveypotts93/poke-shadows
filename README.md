@@ -1,6 +1,6 @@
 # PokéQuiz
 
-A mobile-friendly, installable Pokémon shadow quiz. Choose which of the nine generations to include, then play in Normal mode with official-art silhouettes or Hard mode with a different pose. Use **Download for offline** to save both poses and choice artwork for every Pokémon in the selected generations on this device. The app and selected quiz then work offline. Large generation selections may use substantial storage and data.
+A mobile-friendly, installable Pokémon shadow quiz. Choose which of the nine generations to include (Generations I–III are selected by default), then identify each Pokémon from its official-art silhouette and four fully coloured choices. Use **Download for offline** to save the quiz artwork for every Pokémon in the selected generations on this device. The app and selected quiz then work offline. Large generation selections may use substantial storage and data.
 
 ## Install on a phone or tablet
 
