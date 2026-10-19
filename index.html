@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7ff">
+    <meta name="description" content="Can you identify the Pokémon from its shadow?">
+    <title>Who's That Pokémon? — Shadow Quiz</title>
+    <link rel="preconnect" href="https://pokeapi.co">
+    <link rel="preconnect" href="https://raw.githubusercontent.com">
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="./" aria-label="Who's That Pokémon home">
+          <span class="brand-mark" aria-hidden="true">●</span>
+          <span>POKÉ<span class="brand-accent">QUIZ</span></span>
+        </a>
+        <div class="score-pill" aria-live="polite">
+          <span class="score-star" aria-hidden="true">★</span>
+          <span><span class="score-label">SCORE</span> <strong id="score">0</strong></span>
+        </div>
+      </header>
+
+      <section class="quiz" aria-labelledby="quiz-title">
+        <div class="intro">
+          <p class="eyebrow"><span class="eyebrow-dot"></span> THE SHADOW CHALLENGE</p>
+          <h1 id="quiz-title">Who's that <span>Pokémon?</span></h1>
+          <p class="subtitle">Study the shadow. Pick the Pokémon.</p>
+        </div>
+
+        <section class="mystery-card" aria-label="Mystery Pokémon">
+          <div class="card-topline">
+            <span class="round-label" id="round-label">ROUND 1</span>
+            <span class="sparkle" aria-hidden="true">✦</span>
+          </div>
+          <div class="pokemon-stage">
+            <div class="loading-state" id="loading-state" role="status">
+              <span class="loader" aria-hidden="true"></span>
+              <span>Finding a Pokémon...</span>
+            </div>
+            <img class="mystery-image is-hidden" id="mystery-image" alt="A mystery Pokémon silhouette">
+          </div>
+          <div class="card-bottomline">
+            <span class="hint-mark" aria-hidden="true">?</span>
+            <span id="prompt-text">Choose the Pokémon that matches the shadow</span>
+          </div>
+        </section>
+
+        <div class="answer-heading">
+          <h2>Make your guess</h2>
+          <span>Pick one</span>
+        </div>
+        <div class="choices" id="choices" aria-label="Pokémon choices"></div>
+
+        <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+        <button class="next-button is-hidden" id="next-button" type="button">
+          Next Pokémon <span aria-hidden="true">→</span>
+        </button>
+        <p class="error-message is-hidden" id="error-message" role="alert">
+          Pokémon couldn't load. Check your connection and try again.
+          <button class="retry-button" id="retry-button" type="button">Try again</button>
+        </p>
+        <p class="credit">Gotta recognize ’em all!</p>
+      </section>
+    </main>
+  </body>
+</html>
