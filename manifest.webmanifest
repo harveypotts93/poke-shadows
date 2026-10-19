@@ -1,0 +1,26 @@
+{
+  "id": "./",
+  "name": "PokéQuiz — Pokémon Shadow Challenge",
+  "short_name": "PokéQuiz",
+  "description": "Can you identify the Pokémon from its shadow?",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f7ff",
+  "theme_color": "#f5f7ff",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

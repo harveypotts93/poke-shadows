@@ -5,9 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f5f7ff">
     <meta name="description" content="Can you identify the Pokémon from its shadow?">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="PokéQuiz">
     <title>Who's That Pokémon? — Shadow Quiz</title>
     <link rel="preconnect" href="https://pokeapi.co">
     <link rel="preconnect" href="https://raw.githubusercontent.com">
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" href="./icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="./icon-180.png">
     <link rel="stylesheet" href="styles.css">
     <script src="app.js" defer></script>
   </head>
@@ -18,11 +24,20 @@
           <span class="brand-mark" aria-hidden="true">●</span>
           <span>POKÉ<span class="brand-accent">QUIZ</span></span>
         </a>
-        <div class="score-pill" aria-live="polite">
-          <span class="score-star" aria-hidden="true">★</span>
-          <span><span class="score-label">SCORE</span> <strong id="score">0</strong></span>
+        <div class="header-actions">
+          <button class="install-button" id="install-button" type="button">
+            <svg aria-hidden="true" viewBox="0 0 20 20">
+              <path d="M10 2.5v9m0 0 3.5-3.5M10 11.5 6.5 8M3.5 13v3.5h13V13" />
+            </svg>
+            <span>Install app</span>
+          </button>
+          <div class="score-pill" aria-live="polite">
+            <span class="score-star" aria-hidden="true">★</span>
+            <span><span class="score-label">SCORE</span> <strong id="score">0</strong></span>
+          </div>
         </div>
       </header>
+      <p class="install-hint is-hidden" id="install-hint" role="status" aria-live="polite"></p>
 
       <section class="quiz" aria-labelledby="quiz-title">
         <div class="intro">

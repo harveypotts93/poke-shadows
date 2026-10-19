@@ -1,5 +1,6 @@
 const API_URL = "https://pokeapi.co/api/v2/pokemon?limit=151";
-const ARTWORK_URL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork";
+const ARTWORK_ORIGIN = "https://raw.githubusercontent.com";
+const ARTWORK_URL = `${ARTWORK_ORIGIN}/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork`;
 
 const scoreElement = document.querySelector("#score");
 const roundElement = document.querySelector("#round-label");
@@ -11,6 +12,8 @@ const feedbackElement = document.querySelector("#feedback");
 const nextButton = document.querySelector("#next-button");
 const errorElement = document.querySelector("#error-message");
 const retryButton = document.querySelector("#retry-button");
+const installButton = document.querySelector("#install-button");
+const installHint = document.querySelector("#install-hint");
 
 let pokemonList = [];
 let questionOrder = [];
@@ -18,6 +21,72 @@ let questionIndex = 0;
 let score = 0;
 let currentAnswer = null;
 let answered = false;
+let installPrompt = null;
+
+function isRunningAsApp() {
+  return window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+}
+
+function showInstallInstructions() {
+  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent)
+    || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  installHint.textContent = isIOS
+    ? "To install: tap Share, then Add to Home Screen."
+    : "To install: open your browser menu and choose Install app or Add to Home screen.";
+  installHint.classList.remove("is-hidden");
+}
+
+async function installApp() {
+  if (!installPrompt) {
+    showInstallInstructions();
+    return;
+  }
+
+  await installPrompt.prompt();
+  const choice = await installPrompt.userChoice;
+  installPrompt = null;
+  if (choice.outcome === "accepted") {
+    installButton.classList.add("is-hidden");
+    installHint.textContent = "PokéQuiz is installing.";
+    installHint.classList.remove("is-hidden");
+  }
+}
+
+function setupInstallPrompt() {
+  if (isRunningAsApp()) {
+    installButton.classList.add("is-hidden");
+    return;
+  }
+
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    installPrompt = event;
+  });
+
+  window.addEventListener("appinstalled", () => {
+    installPrompt = null;
+    installButton.classList.add("is-hidden");
+    installHint.textContent = "PokéQuiz is installed and ready to play.";
+    installHint.classList.remove("is-hidden");
+  });
+
+  installButton.addEventListener("click", installApp);
+}
+
+async function registerServiceWorker() {
+  if (!("serviceWorker" in navigator) || !window.isSecureContext) return;
+  try {
+    await navigator.serviceWorker.register("./sw.js");
+    await navigator.serviceWorker.ready;
+    if (!navigator.serviceWorker.controller) {
+      await new Promise((resolve) => {
+        navigator.serviceWorker.addEventListener("controllerchange", resolve, { once: true });
+      });
+    }
+  } catch (error) {
+    console.error("Unable to register the offline app worker.", error);
+  }
+}
 
 function shuffle(items) {
   const shuffled = [...items];
@@ -37,6 +106,21 @@ function formatName(name) {
     .split("-")
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(" ");
+}
+
+async function loadCachedPokemon() {
+  if (navigator.onLine || !("caches" in window)) return pokemonList;
+
+  const cache = await caches.open("poke-quiz-v1");
+  const cachedIds = new Set(
+    (await cache.keys())
+      .map((request) => new URL(request.url))
+      .filter((url) => url.origin === ARTWORK_ORIGIN)
+      .map((url) => url.pathname.match(/\/official-artwork\/(\d+)\.png$/)?.[1])
+      .filter(Boolean)
+  );
+  const availablePokemon = pokemonList.filter((pokemon) => cachedIds.has(String(pokemon.id)));
+  return availablePokemon.length >= 4 ? availablePokemon : pokemonList;
 }
 
 function hideError() {
@@ -156,6 +240,7 @@ async function startGame() {
     if (pokemonList.length < 4) {
       throw new Error("PokéAPI returned fewer than four Pokémon");
     }
+    pokemonList = await loadCachedPokemon();
 
     questionOrder = shuffle(pokemonList);
     questionIndex = 0;
@@ -170,4 +255,5 @@ async function startGame() {
 
 nextButton.addEventListener("click", nextQuestion);
 retryButton.addEventListener("click", startGame);
-startGame();
+setupInstallPrompt();
+registerServiceWorker().then(startGame);

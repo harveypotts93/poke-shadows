@@ -72,6 +72,61 @@ button {
   color: var(--purple);
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.install-button {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 12px;
+  border: 1px solid #ebe9f8;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--purple-dark);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+
+.install-button:hover {
+  border-color: #c9bef8;
+  background: #fbfaff;
+}
+
+.install-button:focus-visible {
+  outline: 3px solid #b9aaff;
+  outline-offset: 3px;
+}
+
+.install-button svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.install-hint {
+  width: fit-content;
+  max-width: 100%;
+  margin: -7px 0 0 auto;
+  padding: 8px 12px;
+  border: 1px solid #e7e1ff;
+  border-radius: 10px;
+  background: #fff;
+  color: #5f5489;
+  font-size: 12px;
+}
+
 .score-pill {
   display: flex;
   min-height: 40px;
@@ -498,6 +553,27 @@ h1 span {
 
   .topbar {
     height: 70px;
+  }
+
+  .header-actions {
+    gap: 6px;
+  }
+
+  .install-button {
+    min-height: 38px;
+    gap: 5px;
+    padding: 0 9px;
+    font-size: 11px;
+  }
+
+  .score-pill {
+    min-height: 38px;
+    gap: 6px;
+    padding: 0 10px;
+  }
+
+  .score-label {
+    margin-right: 3px;
   }
 
   .quiz {
