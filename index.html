@@ -39,12 +39,75 @@
       </header>
       <p class="install-hint is-hidden" id="install-hint" role="status" aria-live="polite"></p>
 
-      <section class="quiz" aria-labelledby="quiz-title">
+      <section class="setup-screen" id="setup-screen" aria-labelledby="setup-title">
+        <div class="intro">
+          <p class="eyebrow"><span class="eyebrow-dot"></span> BUILD YOUR QUIZ</p>
+          <h1 id="setup-title">Pick your <span>Pokémon</span></h1>
+          <p class="subtitle">Choose generations and a challenge mode.</p>
+        </div>
+
+        <fieldset class="setup-section">
+          <legend>Generations</legend>
+          <p class="section-hint">Choose one or more generations to include.</p>
+          <div class="generation-grid">
+            <label class="generation-option"><input class="generation-checkbox" type="checkbox" value="1" checked><span><strong>Gen I</strong><small>Kanto · 1–151</small></span></label>
+            <label class="generation-option"><input class="generation-checkbox" type="checkbox" value="2" checked><span><strong>Gen II</strong><small>Johto · 152–251</small></span></label>
+            <label class="generation-option"><input class="generation-checkbox" type="checkbox" value="3" checked><span><strong>Gen III</strong><small>Hoenn · 252–386</small></span></label>
+            <label class="generation-option"><input class="generation-checkbox" type="checkbox" value="4" checked><span><strong>Gen IV</strong><small>Sinnoh · 387–493</small></span></label>
+            <label class="generation-option"><input class="generation-checkbox" type="checkbox" value="5" checked><span><strong>Gen V</strong><small>Unova · 494–649</small></span></label>
+            <label class="generation-option"><input class="generation-checkbox" type="checkbox" value="6" checked><span><strong>Gen VI</strong><small>Kalos · 650–721</small></span></label>
+            <label class="generation-option"><input class="generation-checkbox" type="checkbox" value="7" checked><span><strong>Gen VII</strong><small>Alola · 722–809</small></span></label>
+            <label class="generation-option"><input class="generation-checkbox" type="checkbox" value="8" checked><span><strong>Gen VIII</strong><small>Galar · 810–905</small></span></label>
+            <label class="generation-option"><input class="generation-checkbox" type="checkbox" value="9" checked><span><strong>Gen IX</strong><small>Paldea · 906–1025</small></span></label>
+          </div>
+          <div class="generation-actions">
+            <button class="text-button" id="select-all-generations" type="button">Select all</button>
+            <span aria-hidden="true">·</span>
+            <button class="text-button" id="clear-generations" type="button">Clear</button>
+            <span class="pokemon-count" id="pokemon-count">Loading Pokémon…</span>
+          </div>
+        </fieldset>
+
+        <fieldset class="setup-section mode-section">
+          <legend>Challenge mode</legend>
+          <div class="mode-options">
+            <label class="mode-option">
+              <input type="radio" name="mode" value="normal" checked>
+              <span class="mode-copy"><strong>Normal</strong><small>Recognize the official artwork silhouette.</small></span>
+              <span class="mode-check" aria-hidden="true">✓</span>
+            </label>
+            <label class="mode-option">
+              <input type="radio" name="mode" value="hard">
+              <span class="mode-copy"><strong>Hard</strong><small>The shadow uses a different Pokémon pose.</small></span>
+              <span class="mode-check" aria-hidden="true">✓</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="setup-error is-hidden" id="setup-error" role="alert"></div>
+        <div class="offline-progress is-hidden" id="offline-progress" aria-live="polite">
+          <div class="progress-copy"><span id="progress-label">Preparing offline quiz…</span><span id="progress-count">0%</span></div>
+          <progress id="download-progress" max="100" value="0"></progress>
+          <button class="text-button cancel-download" id="cancel-download" type="button">Cancel download</button>
+        </div>
+        <div class="setup-buttons">
+          <button class="primary-button" id="start-button" type="button" disabled>Play quiz <span aria-hidden="true">→</span></button>
+          <button class="offline-button" id="download-offline-button" type="button" disabled>
+            <svg aria-hidden="true" viewBox="0 0 20 20"><path d="M10 2.5v9m0 0 3.5-3.5M10 11.5 6.5 8M3.5 13v3.5h13V13" /></svg>
+            Download for offline
+          </button>
+        </div>
+        <p class="offline-note" id="offline-note">Offline download saves both shadow poses and choice artwork for every selected Pokémon on this device.</p>
+        <p class="credit">Gotta recognize ’em all!</p>
+      </section>
+
+      <section class="quiz is-hidden" id="quiz-screen" aria-labelledby="quiz-title">
         <div class="intro">
           <p class="eyebrow"><span class="eyebrow-dot"></span> THE SHADOW CHALLENGE</p>
           <h1 id="quiz-title">Who's that <span>Pokémon?</span></h1>
           <p class="subtitle">Study the shadow. Pick the Pokémon.</p>
         </div>
+        <button class="back-button" id="back-button" type="button">← Quiz settings</button>
 
         <section class="mystery-card" aria-label="Mystery Pokémon">
           <div class="card-topline">
@@ -70,15 +133,18 @@
         </div>
         <div class="choices" id="choices" aria-label="Pokémon choices"></div>
 
-        <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
-        <button class="next-button is-hidden" id="next-button" type="button">
-          Next Pokémon <span aria-hidden="true">→</span>
-        </button>
+        <div class="round-controls is-hidden" id="round-controls">
+          <div class="round-controls-inner">
+            <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+            <button class="next-button is-hidden" id="next-button" type="button">
+              Next Pokémon <span aria-hidden="true">→</span>
+            </button>
+          </div>
+        </div>
         <p class="error-message is-hidden" id="error-message" role="alert">
           Pokémon couldn't load. Check your connection and try again.
-          <button class="retry-button" id="retry-button" type="button">Try again</button>
+          <button class="retry-button" id="retry-button" type="button">Back to quiz settings</button>
         </p>
-        <p class="credit">Gotta recognize ’em all!</p>
       </section>
     </main>
   </body>

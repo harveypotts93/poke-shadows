@@ -1,10 +1,10 @@
 # PokéQuiz
 
-A mobile-friendly, installable Pokémon shadow quiz. The app shell and previously loaded Pokémon data and artwork are cached for offline play. An internet connection is required the first time you open the quiz and for uncached Pokémon artwork.
+A mobile-friendly, installable Pokémon shadow quiz. Choose which of the nine generations to include, then play in Normal mode with official-art silhouettes or Hard mode with a different pose. Use **Download for offline** to save both poses and choice artwork for every Pokémon in the selected generations on this device. The app and selected quiz then work offline. Large generation selections may use substantial storage and data.
 
 ## Install on a phone or tablet
 
-Open the deployed site over HTTPS in your browser and tap **Install app**. If the browser does not offer an install prompt, follow the on-screen instructions: in iOS Safari, use **Share → Add to Home Screen**; in Android browsers, use the browser menu and select **Install app** or **Add to Home screen**.
+Open the deployed site over HTTPS in your browser, choose **Download for offline** while connected, then tap **Install app**. If the browser does not offer an install prompt, follow the on-screen instructions: in iOS Safari, use **Share → Add to Home Screen**; in Android browsers, use the browser menu and select **Install app** or **Add to Home screen**.
 
 ## Publish with GitHub Pages
 

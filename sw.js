@@ -1,4 +1,6 @@
-const CACHE_NAME = "poke-quiz-v1";
+const APP_CACHE_NAME = "poke-quiz-app-v3";
+const ARTWORK_CACHE_NAME = "poke-quiz-artwork-v1";
+const DATA_CACHE_NAME = "poke-quiz-data-v1";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -15,7 +17,7 @@ const ARTWORK_ORIGIN = "https://raw.githubusercontent.com";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
+    caches.open(APP_CACHE_NAME)
       .then((cache) => cache.addAll(APP_SHELL))
       .then(() => self.skipWaiting())
   );
@@ -26,20 +28,25 @@ self.addEventListener("activate", (event) => {
     caches.keys()
       .then((keys) => Promise.all(
         keys
-          .filter((key) => key.startsWith("poke-quiz-") && key !== CACHE_NAME)
+          .filter((key) => key.startsWith("poke-quiz-app-v") && key !== APP_CACHE_NAME)
           .map((key) => caches.delete(key))
       ))
       .then(() => self.clients.claim())
   );
 });
 
-async function cacheFirst(request) {
-  const cached = await caches.match(request);
+async function cacheFirst(request, cacheName) {
+  const cache = await caches.open(cacheName);
+  const cached = await cache.match(request);
   if (cached) return cached;
+
+  if (cacheName === ARTWORK_CACHE_NAME) {
+    const legacyCached = await caches.match(request);
+    if (legacyCached) return legacyCached;
+  }
 
   const response = await fetch(request);
   if (response.ok || response.type === "opaque") {
-    const cache = await caches.open(CACHE_NAME);
     await cache.put(request, response.clone());
   }
   return response;
@@ -49,7 +56,7 @@ async function networkFirst(request) {
   try {
     const response = await fetch(request);
     if (response.ok) {
-      const cache = await caches.open(CACHE_NAME);
+      const cache = await caches.open(DATA_CACHE_NAME);
       await cache.put(request, response.clone());
     }
     return response;
@@ -64,9 +71,10 @@ async function navigationRequest(request) {
   try {
     return await fetch(request);
   } catch (error) {
-    const cachedPage = await caches.match(request);
+    const appCache = await caches.open(APP_CACHE_NAME);
+    const cachedPage = await appCache.match(request);
     if (cachedPage) return cachedPage;
-    const appShell = await caches.match("./index.html");
+    const appShell = await appCache.match("./index.html");
     if (appShell) return appShell;
     throw error;
   }
@@ -83,7 +91,7 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (url.origin === ARTWORK_ORIGIN) {
-    event.respondWith(cacheFirst(request));
+    event.respondWith(cacheFirst(request, ARTWORK_CACHE_NAME));
     return;
   }
 
@@ -92,5 +100,5 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(navigationRequest(request));
     return;
   }
-  event.respondWith(cacheFirst(request));
+  event.respondWith(cacheFirst(request, APP_CACHE_NAME));
 });
