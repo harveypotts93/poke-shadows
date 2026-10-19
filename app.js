@@ -347,6 +347,7 @@ function selectAnswer(button, pokemon) {
   }
 
   mysteryImage.style.filter = "none";
+  mysteryImage.src = imageUrl(currentAnswer);
   mysteryImage.alt = formatName(currentAnswer.name);
   promptElement.textContent = "Mystery solved!";
   roundControls.classList.remove("is-hidden");
